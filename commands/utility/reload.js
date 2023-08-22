@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("discord.js");
-const { guildId } = require("../../config.json");
+const { guildId, devId } = require("../../config.json");
 
 module.exports = {
   category: "utility",
@@ -13,7 +13,7 @@ module.exports = {
         .setRequired(true)
     ),
   async execute(interaction) {
-    if (interaction.guild.id === guildId) {
+    if (interaction.guild.id === guildId || devId === interaction.user.id) {
       const commandName = interaction.options
         .getString("command", true)
         .toLowerCase();
@@ -33,9 +33,10 @@ module.exports = {
         interaction.client.commands.delete(command.data.name);
         const newCommand = require(`../${command.category}/${command.data.name}.js`);
         interaction.client.commands.set(newCommand.data.name, newCommand);
-        await interaction.reply(
-          `Command \`${newCommand.data.name}\` was reloaded!`
-        );
+        await interaction.reply({
+          content: `Command \`${newCommand.data.name}\` was reloaded!`,
+          ephemeral: true,
+        });
       } catch (error) {
         console.error(error);
         await interaction.reply(
