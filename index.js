@@ -40,3 +40,4 @@ for (const file of eventFiles) {
 
 // Log in to Discord
 client.login(token);
+require('http').createServer((req, res) => res.end('Bot is alive!')).listen(3000)
